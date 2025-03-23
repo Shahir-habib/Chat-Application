@@ -2,26 +2,92 @@ import "./chat.css"
 import EmojiPicker from "emoji-picker-react";
 import { useEffect, useState } from "react";
 import { useRef } from "react";
-
+import {
+    arrayUnion,
+    doc,
+    getDoc,
+    onSnapshot,
+    updateDoc,
+  } from "firebase/firestore";
+import { db } from "../../lib/firebase";
+import { useChatStore } from "../../lib/chatStore";
+import { useUserStore } from "../../lib/userStore";
 const Chat = () => {
+    const [chat,setChat] = useState([]);
     const [open, setOpen] = useState(false);
     const [text, setText] = useState("");
+    const { currentUser } = useUserStore();
+    const { chatId, user, isCurrentUserBlocked, isReceiverBlocked } =
+      useChatStore();
     const endRef = useRef(null);
     useEffect(() => {
         endRef.current?.scrollIntoView({ behavior: "smooth" });
 
-    }   , []);
+    }   , [chat.messages]);
+
+    useEffect(() => {
+        const unSub = onSnapshot( doc(db, "chats", chatId),
+        (res) => {
+            setChat(res.data());
+        }   );
+        return () => {
+            unSub();
+        };
+    }   , [chatId]);   
+
     const handleEmoji = (emojiObject) => {
         setText(text + emojiObject.emoji);
         setOpen(false);
     };
+    const handleSend = async () => {
+        
+        if (text === "") return;
+    
+        try {
+        
+    
+          await updateDoc(doc(db, "chats", chatId), {
+            messages: arrayUnion({
+              senderId: currentUser.id,
+              text,
+              createdAt: new Date(),
+            }),
+          });
+          const userIDs = [currentUser.id, user.id];
+    
+          userIDs.forEach(async (id) => {
+            const userChatsRef = doc(db, "userchats", id);
+            const userChatsSnapshot = await getDoc(userChatsRef);
+    
+            if (userChatsSnapshot.exists()) {
+              const userChatsData = userChatsSnapshot.data();
+    
+              const chatIndex = userChatsData.chats.findIndex(
+                (c) => c.chatId === chatId
+              );
+    
+              userChatsData.chats[chatIndex].lastMessage = text;
+              userChatsData.chats[chatIndex].isSeen =
+                id === currentUser.id ? true : false;
+              userChatsData.chats[chatIndex].updatedAt = Date.now();
+    
+              await updateDoc(userChatsRef, {
+                chats: userChatsData.chats,
+              });
+            }
+          });
+        } catch (err) {
+          console.log(err);
+        
+         }
+      };
     return (
         <div className="chat">
             <div className="top">
                 <div className="user">
                     <img className="userImg" src="./avatar.png" alt="" />
                     <div className="texts">
-                        <span>jane dow</span>
+                        <span>{user?.username}</span>
                         <p>Lorem ipsum dolor .</p>
                     </div>
                 </div>
@@ -33,49 +99,16 @@ const Chat = () => {
             </div>
 
             <div className="center">
-                <div className="message">
-                    <img src="./avatar.png" alt="" />
-                    <div className="texts">
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
-                        <span>12:00</span>
+                { chat?.messages?.map( (message) => (
+                    <div className={message.senderId===currentUser?.id ? "message own" : "message" } key = {message?.createdAt}>
+                    
+                    <div className="texts">{
+                            message.img && <img src ={message.img} alt=" "/>
+                        }<p> {message.text}</p>
+                        {/* {<span>{message.createdAt}</span>} */}
                     </div>
                 </div>
-                <div className="message own">
-                    <img src="./avatar.png" alt="" />
-                    <div className="texts">
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
-                        <span>12:00</span>
-                    </div>
-                </div>
-                <div className="message">
-                    <img src="./avatar.png" alt="" />
-                    <div className="texts">
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
-                        <span>12:00</span>
-                    </div>
-                </div>
-                <div className="message own">
-                    <img src="./avatar.png" alt="" />
-                    <div className="texts">
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
-                        <span>12:00</span>
-                    </div>
-                </div>
-                <div className="message">
-                    <img src="./avatar.png" alt="" />
-                    <div className="texts">
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
-                        <span>12:00</span>
-                    </div>
-                </div>
-                <div className="message own">
-                    <img src="./avatar.png" alt="" />
-                    <div className="texts">
-                        <img src="https://www.citimuzik.com/wp-content/uploads/2022/11/cristiano-ronaldo-portugal-5-june-2022-1.jpg" alt="" />
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
-                        <span>12:00</span>
-                    </div>
-                </div>
+                    ))}
                 <div ref ={endRef}></div>
             </div>
             <div className="bottom">
@@ -95,7 +128,7 @@ const Chat = () => {
                         <EmojiPicker open={open} onEmojiClick={handleEmoji} />
                     </div>
                 </div>
-                <button className="sendButton">Send</button>
+                <button className="sendButton" onClick={handleSend}>Send</button>
 
             </div>
 

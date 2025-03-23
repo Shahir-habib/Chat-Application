@@ -1,30 +1,80 @@
 .userInfo {
-    padding: 20px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .user {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-  
-    .user {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-  
-      img {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        object-fit: cover;
-      }
-    }
-  
-    .icons {
-      display: flex;
-      gap: 20px;
-  
-      img {
-        width: 20px;
-        height: 20px;
-        cursor: pointer;
-      }
+    gap: 20px;
+
+    img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
     }
   }
+
+  .icons {
+    display: flex;
+    gap: 20px;
+
+    img {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+  }
+}
+
+.groupPopup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  padding: 20px;
+  background-color: transparent;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  z-index: 1000;
+
+
+  .popupHeader {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+    background-color: rgb(37, 11, 33);
+  }
+
+  .popupContent {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    input{
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    .buttonGroup {
+      display: flex;
+      justify-content: space-between;
+
+      padding: 10px 100px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      background-color: pink;
+
+
+
+    }
+  }
+}
