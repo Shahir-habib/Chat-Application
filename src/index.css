@@ -5,37 +5,46 @@
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
+
 html {
-  --s: 65px; /* control the size*/
-  --c1: #ddd9ab;
-  --c2: #e5625c;
-  
-  --g:#0000 calc(125%/3),var(--c1) 0 calc(175%/3),#0000 0;
-  --p:calc(var(--s)/2) calc(var(--s)/2)/calc(2*var(--s)) calc(2*var(--s));
+  --s: 65px; /* size of the pattern */
+  --c1: #a7f3d0; /* light mint green */
+  --c2: #10b981; /* emerald green accent */
+
+  --g: #0000 calc(125% / 3), var(--c1) 0 calc(175% / 3), #0000 0;
+  --p: calc(var(--s) / 2) calc(var(--s) / 2) / calc(2 * var(--s)) calc(2 * var(--s));
+
   background:
-    radial-gradient(var(--c1) 34%,#0000 36%) 0 0/var(--s) var(--s),
-    linear-gradient( 45deg,var(--g)) var(--p),
-    linear-gradient(-45deg,var(--g)) var(--p) var(--c2);
+    radial-gradient(var(--c1) 34%, #0000 36%) 0 0 / var(--s) var(--s),
+    linear-gradient(45deg, var(--g)) var(--p),
+    linear-gradient(-45deg, var(--g)) var(--p),
+    var(--c2);
 }
-body{
+
+body {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  color:white;
+  color: #ffffff;
 }
-.container{
+
+.container {
   width: 90vw;
   height: 90vh;
-  background-color:rgba(208, 145, 163, 0.75);
-  backdrop-filter: blur(10px) saturate(100%);
+  background-color: rgba(30, 41, 59, 0.75); /* deep slate tone */
+  backdrop-filter: blur(12px) saturate(130%);
   border-radius: 12px;
-  border : 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
-.loading{
+
+.loading {
   padding: 50px;
   font-size: 36px;
   border-radius: 10px;
   background-color: rgba(17, 25, 40, 0.9);
+  color: #f1f5f9; /* light gray-blue text */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
 }

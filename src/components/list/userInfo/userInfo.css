@@ -29,6 +29,56 @@
   }
 }
 
+button {
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+.searchResults {
+  margin-top: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+
+}
+
+.selectedMembers {
+  margin-top: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+
+}
+
+
 .groupPopup {
   position: absolute;
   top: 50%;
@@ -55,7 +105,7 @@
     flex-direction: column;
     gap: 10px;
 
-    input{
+    input {
       padding: 10px;
       border: 1px solid #ccc;
       border-radius: 5px;
